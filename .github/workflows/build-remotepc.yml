@@ -1,0 +1,91 @@
+name: Build RemotePC IPA
+
+# Same proven recipe as HelloWorld: macos-15 (Xcode 16 for pbxproj format 77),
+# explicit scheme, structural .ipa validation, and the finished .ipa committed
+# to dist/ so it can be downloaded without a GitHub login.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'RemotePC/**'
+      - '.github/workflows/build-remotepc.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-15
+    defaults:
+      run:
+        working-directory: RemotePC
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepare log
+        working-directory: .
+        run: |
+          mkdir -p ci-logs dist
+          echo "RemotePC CI - $(date -u)" > ci-logs/remotepc.txt
+
+      - name: Toolchain
+        run: |
+          { xcodebuild -version; brew install xcodegen >/dev/null 2>&1; xcodegen --version; } \
+            2>&1 | tee -a "$GITHUB_WORKSPACE/ci-logs/remotepc.txt"
+
+      - name: Generate Xcode project
+        run: xcodegen generate 2>&1 | tee -a "$GITHUB_WORKSPACE/ci-logs/remotepc.txt"
+
+      - name: Build (unsigned)
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project RemotePC.xcodeproj \
+            -scheme RemotePC \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            ONLY_ACTIVE_ARCH=NO \
+            build 2>&1 | tail -40 | tee -a "$GITHUB_WORKSPACE/ci-logs/remotepc.txt"
+
+      - name: Package into .ipa
+        run: |
+          set -o pipefail
+          APP=build/Build/Products/Release-iphoneos/RemotePC.app
+          ls -la "$APP" 2>&1 | tee -a "$GITHUB_WORKSPACE/ci-logs/remotepc.txt"
+          rm -rf Payload && mkdir -p Payload
+          cp -R "$APP" Payload/
+          zip -qr RemotePC.ipa Payload
+          unzip -l RemotePC.ipa 2>&1 | tee -a "$GITHUB_WORKSPACE/ci-logs/remotepc.txt"
+          test -f Payload/RemotePC.app/RemotePC || { echo "ERROR: no executable"; exit 1; }
+          test -f Payload/RemotePC.app/Info.plist || { echo "ERROR: no Info.plist"; exit 1; }
+          file Payload/RemotePC.app/RemotePC | grep -q "Mach-O" || { echo "ERROR: not Mach-O"; exit 1; }
+          echo "IPA OK: $(stat -f%z RemotePC.ipa) bytes" | tee -a "$GITHUB_WORKSPACE/ci-logs/remotepc.txt"
+
+      - name: Copy .ipa into dist
+        run: cp RemotePC.ipa "$GITHUB_WORKSPACE/dist/RemotePC.ipa"
+
+      - name: Publish .ipa + log back to repo
+        if: always()
+        working-directory: .
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f ci-logs/remotepc.txt dist/RemotePC.ipa || true
+          git commit -m "CI: publish RemotePC ipa + log [skip ci]" || echo "nothing to commit"
+          git pull --rebase --autostash || true
+          git push || true
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: RemotePC-ipa
+          path: RemotePC/RemotePC.ipa
+          if-no-files-found: error

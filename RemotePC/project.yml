@@ -1,0 +1,49 @@
+name: RemotePC
+options:
+  bundleIdPrefix: com.arthuril
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+
+targets:
+  RemotePC:
+    type: application
+    platform: iOS
+    sources:
+      - Sources
+    # A real Info.plist (not GENERATE_INFOPLIST_FILE) because we need the
+    # nested NSAppTransportSecurity dict to allow plain-HTTP to the PC, plus
+    # the local-network usage string iOS 14+ requires.
+    info:
+      path: Info.plist
+      properties:
+        CFBundleDisplayName: RemotePC
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        NSLocalNetworkUsageDescription: "RemotePC connects to your PC over your local network or Tailscale."
+        NSAppTransportSecurity:
+          NSAllowsArbitraryLoads: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.arthuril.remotepc
+        PRODUCT_NAME: RemotePC
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SWIFT_VERSION: "5.0"
+        CODE_SIGN_IDENTITY: ""
+        CODE_SIGNING_REQUIRED: NO
+        CODE_SIGNING_ALLOWED: NO
+
+schemes:
+  RemotePC:
+    build:
+      targets:
+        RemotePC: all
+    run:
+      config: Debug
+    archive:
+      config: Release
