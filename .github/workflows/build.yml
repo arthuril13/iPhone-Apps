@@ -2,6 +2,10 @@ name: Build HelloWorld IPA
 
 # Builds an UNSIGNED .ipa on a free GitHub-hosted Mac.
 # You then sign + install it with Sideloadly using your own Apple ID.
+#
+# The build is split into small, separately-named steps on purpose: the
+# Actions API exposes each step's name and pass/fail, so the failing step
+# name pinpoints the cause even when the full logs aren't readable.
 
 on:
   push:
@@ -25,18 +29,38 @@ jobs:
       - name: Generate Xcode project
         run: xcodegen generate
 
-      - name: Build (unsigned)
+      - name: Diag - Xcode version
+        run: xcodebuild -version
+
+      - name: Diag - project file exists
         run: |
+          pwd
+          ls -la
+          test -d HelloWorld.xcodeproj && echo "xcodeproj FOUND"
+
+      - name: Diag - list targets and schemes
+        run: xcodebuild -list -project HelloWorld.xcodeproj
+
+      - name: Diag - show generated scheme files
+        run: ls -la HelloWorld.xcodeproj/xcshareddata/xcschemes/ || echo "NO SHARED SCHEMES DIR"
+
+      - name: Build with scheme
+        run: |
+          set -o pipefail
           xcodebuild \
             -project HelloWorld.xcodeproj \
             -scheme HelloWorld \
             -configuration Release \
-            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
             -derivedDataPath build \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
-            ONLY_ACTIVE_ARCH=NO
+            ONLY_ACTIVE_ARCH=NO \
+            build 2>&1 | tail -120
+
+      - name: Diag - show build products
+        run: ls -la build/Build/Products/Release-iphoneos/ || echo "NO PRODUCTS DIR"
 
       - name: Package into .ipa
         run: |
