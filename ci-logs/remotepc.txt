@@ -1,0 +1,65 @@
+RemotePC CI - Sun Sep 13 16:26:48 UTC 2026
+Xcode 16.4
+Build version 16F6
+Version: 2.46.0
+⚙️  Generating plists...
+⚙️  Generating project...
+⚙️  Writing project...
+Created project at /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/RemotePC.xcodeproj
+    cd /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC
+    /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios16.0 -isysroot /Applications/Xcode_16.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.5.sdk -Os -L/Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Intermediates.noindex/EagerLinkingTBDs/Release-iphoneos -L/Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Products/Release-iphoneos -F/Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Intermediates.noindex/EagerLinkingTBDs/Release-iphoneos -F/Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Products/Release-iphoneos -filelist /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Intermediates.noindex/RemotePC.build/Release-iphoneos/RemotePC.build/Objects-normal/arm64/RemotePC.LinkFileList -Xlinker -rpath -Xlinker @executable_path/Frameworks -dead_strip -Xlinker -object_path_lto -Xlinker /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Intermediates.noindex/RemotePC.build/Release-iphoneos/RemotePC.build/Objects-normal/arm64/RemotePC_lto.o -Xlinker -dependency_info -Xlinker /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Intermediates.noindex/RemotePC.build/Release-iphoneos/RemotePC.build/Objects-normal/arm64/RemotePC_dependency_info.dat -fobjc-link-runtime -L/Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Intermediates.noindex/RemotePC.build/Release-iphoneos/RemotePC.build/Objects-normal/arm64/RemotePC.swiftmodule -o /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Products/Release-iphoneos/RemotePC.app/RemotePC
+
+GenerateDSYMFile /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Products/Release-iphoneos/RemotePC.app.dSYM /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Products/Release-iphoneos/RemotePC.app/RemotePC (in target 'RemotePC' from project 'RemotePC')
+    cd /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC
+    /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/dsymutil /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Products/Release-iphoneos/RemotePC.app/RemotePC -o /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Products/Release-iphoneos/RemotePC.app.dSYM
+
+ExtractAppIntentsMetadata (in target 'RemotePC' from project 'RemotePC')
+    cd /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC
+    /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --module-name RemotePC --sdk-root /Applications/Xcode_16.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.5.sdk --xcode-version 16F6 --platform-family iOS --deployment-target 16.0 --bundle-identifier com.arthuril.remotepc --output /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Products/Release-iphoneos/RemotePC.app --target-triple arm64-apple-ios16.0 --binary-file /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Products/Release-iphoneos/RemotePC.app/RemotePC --dependency-file /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Intermediates.noindex/RemotePC.build/Release-iphoneos/RemotePC.build/Objects-normal/arm64/RemotePC_dependency_info.dat --stringsdata-file /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Intermediates.noindex/RemotePC.build/Release-iphoneos/RemotePC.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Intermediates.noindex/RemotePC.build/Release-iphoneos/RemotePC.build/Objects-normal/arm64/RemotePC.SwiftFileList --metadata-file-list /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Intermediates.noindex/RemotePC.build/Release-iphoneos/RemotePC.build/RemotePC.DependencyMetadataFileList --static-metadata-file-list /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Intermediates.noindex/RemotePC.build/Release-iphoneos/RemotePC.build/RemotePC.DependencyStaticMetadataFileList --swift-const-vals-list /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Intermediates.noindex/RemotePC.build/Release-iphoneos/RemotePC.build/Objects-normal/arm64/RemotePC.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --validate-assistant-intents --no-app-shortcuts-localization
+2026-09-13 16:27:11.349 appintentsmetadataprocessor[4999:17518] Starting appintentsmetadataprocessor export
+2026-09-13 16:27:11.357 appintentsmetadataprocessor[4999:17518] warning: Metadata extraction skipped. No AppIntents.framework dependency found.
+
+CopySwiftLibs /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Products/Release-iphoneos/RemotePC.app (in target 'RemotePC' from project 'RemotePC')
+    cd /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC
+    builtin-swiftStdLibTool --copy --verbose --scan-executable /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Products/Release-iphoneos/RemotePC.app/RemotePC --scan-folder /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Products/Release-iphoneos/RemotePC.app/Frameworks --scan-folder /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Products/Release-iphoneos/RemotePC.app/PlugIns --scan-folder /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Products/Release-iphoneos/RemotePC.app/SystemExtensions --scan-folder /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Products/Release-iphoneos/RemotePC.app/Extensions --platform iphoneos --toolchain /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Products/Release-iphoneos/RemotePC.app/Frameworks --strip-bitcode --strip-bitcode-tool /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Intermediates.noindex/RemotePC.build/Release-iphoneos/RemotePC.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os
+Ignoring --strip-bitcode because --sign was not passed
+
+AppIntentsSSUTraining (in target 'RemotePC' from project 'RemotePC')
+    cd /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC
+    /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsnltrainingprocessor --infoplist-path /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Products/Release-iphoneos/RemotePC.app/Info.plist --temp-dir-path /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Intermediates.noindex/RemotePC.build/Release-iphoneos/RemotePC.build/ssu --bundle-id com.arthuril.remotepc --product-path /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Products/Release-iphoneos/RemotePC.app --extracted-metadata-path /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Products/Release-iphoneos/RemotePC.app/Metadata.appintents --metadata-file-list /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Intermediates.noindex/RemotePC.build/Release-iphoneos/RemotePC.build/RemotePC.DependencyMetadataFileList --archive-ssu-assets
+2026-09-13 16:27:11.381 appintentsnltrainingprocessor[5004:17531] Parsing options for appintentsnltrainingprocessor
+2026-09-13 16:27:11.383 appintentsnltrainingprocessor[5004:17531] No AppShortcuts found - Skipping.
+
+RegisterExecutionPolicyException /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Products/Release-iphoneos/RemotePC.app (in target 'RemotePC' from project 'RemotePC')
+    cd /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC
+    builtin-RegisterExecutionPolicyException /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Products/Release-iphoneos/RemotePC.app
+
+Validate /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Products/Release-iphoneos/RemotePC.app (in target 'RemotePC' from project 'RemotePC')
+    cd /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC
+    builtin-validationUtility /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Products/Release-iphoneos/RemotePC.app -infoplist-subpath Info.plist
+warning: All interface orientations must be supported unless the app requires full screen. (in target 'RemotePC' from project 'RemotePC')
+
+Touch /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Products/Release-iphoneos/RemotePC.app (in target 'RemotePC' from project 'RemotePC')
+    cd /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC
+    /usr/bin/touch -c /Users/runner/work/iPhone-Apps/iPhone-Apps/RemotePC/build/Build/Products/Release-iphoneos/RemotePC.app
+
+note: Disabling previews because SWIFT_VERSION is set and SWIFT_OPTIMIZATION_LEVEL=-O, expected -Onone (in target 'RemotePC' from project 'RemotePC')
+** BUILD SUCCEEDED **
+
+total 1024
+drwxr-xr-x  5 runner  staff     160 Sep 13 16:27 .
+drwxr-xr-x@ 5 runner  staff     160 Sep 13 16:27 ..
+-rw-r--r--  1 runner  staff    1131 Sep 13 16:26 Info.plist
+-rw-r--r--  1 runner  staff       8 Sep 13 16:26 PkgInfo
+-rwxr-xr-x  1 runner  staff  512512 Sep 13 16:27 RemotePC
+Archive:  RemotePC.ipa
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+        0  09-13-2026 16:27   Payload/
+        0  09-13-2026 16:27   Payload/RemotePC.app/
+   512512  09-13-2026 16:27   Payload/RemotePC.app/RemotePC
+     1131  09-13-2026 16:27   Payload/RemotePC.app/Info.plist
+        8  09-13-2026 16:27   Payload/RemotePC.app/PkgInfo
+---------                     -------
+   513651                     5 files
+IPA OK: 100801 bytes
