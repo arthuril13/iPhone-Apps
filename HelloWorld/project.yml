@@ -27,3 +27,15 @@ targets:
         CODE_SIGN_IDENTITY: ""
         CODE_SIGNING_REQUIRED: NO
         CODE_SIGNING_ALLOWED: NO
+
+# XcodeGen does NOT create schemes automatically, and `xcodebuild -scheme`
+# needs one. Defining it explicitly here is what makes the CI build work.
+schemes:
+  HelloWorld:
+    build:
+      targets:
+        HelloWorld: all
+    run:
+      config: Debug
+    archive:
+      config: Release
