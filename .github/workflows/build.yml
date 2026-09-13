@@ -3,10 +3,12 @@ name: Build HelloWorld IPA
 # Builds an UNSIGNED .ipa on a free GitHub-hosted Mac.
 # You then sign + install it with Sideloadly using your own Apple ID.
 #
-# Actions logs aren't readable without auth, so every diagnostic and build
-# command tees its output into ci-logs/diag.txt, which the final step commits
-# back to the repo (with [skip ci] so it doesn't loop). That file is then
-# readable at raw.githubusercontent.com.
+# IMPORTANT: XcodeGen 2.46 writes pbxproj "objectVersion = 77", which
+# Xcode 15.4 (the macos-14 image) cannot read. The macos-15 image ships
+# Xcode 16, which reads format 77 fine. Do not downgrade the runner.
+#
+# Steps must NOT use continue-on-error: that previously made a broken
+# build report success and upload an empty 235-byte .ipa.
 
 on:
   push:
@@ -18,7 +20,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: macos-14
+    runs-on: macos-15
 
     defaults:
       run:
@@ -34,42 +36,31 @@ jobs:
           mkdir -p ci-logs
           echo "CI diagnostics - $(date -u)" > ci-logs/diag.txt
 
-      - name: Install XcodeGen
-        continue-on-error: true
-        run: |
-          brew install xcodegen 2>&1 | tail -5 | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
-          echo "xcodegen version: $(xcodegen --version 2>&1)" | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
-
-      - name: Generate Xcode project
-        continue-on-error: true
-        run: |
-          echo "=== xcodegen generate ===" >> "$GITHUB_WORKSPACE/ci-logs/diag.txt"
-          xcodegen generate 2>&1 | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
-
-      - name: Diag - environment
-        continue-on-error: true
+      - name: Show toolchain versions
         run: |
           {
             echo "=== xcodebuild -version ==="
-            xcodebuild -version 2>&1
-            echo "=== pwd / ls ==="
-            pwd; ls -la
-            echo "=== xcodeproj contents ==="
-            ls -la HelloWorld.xcodeproj 2>&1
-            echo "=== project.pbxproj head ==="
-            head -20 HelloWorld.xcodeproj/project.pbxproj 2>&1
+            xcodebuild -version
+            echo "=== xcodegen ==="
+            brew install xcodegen >/dev/null 2>&1
+            xcodegen --version
           } 2>&1 | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
 
-      - name: Diag - list targets and schemes
-        continue-on-error: true
+      - name: Generate Xcode project
         run: |
-          echo "=== xcodebuild -list (THIS IS THE FAILING COMMAND) ===" >> "$GITHUB_WORKSPACE/ci-logs/diag.txt"
-          xcodebuild -list -project HelloWorld.xcodeproj 2>&1 | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
-          echo "exit code was: $?" | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
+          echo "=== xcodegen generate ===" >> "$GITHUB_WORKSPACE/ci-logs/diag.txt"
+          xcodegen generate 2>&1 | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
+          echo "objectVersion in generated project:" | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
+          grep -m1 objectVersion HelloWorld.xcodeproj/project.pbxproj | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
 
-      - name: Build with scheme
-        continue-on-error: true
+      - name: List targets and schemes
         run: |
+          echo "=== xcodebuild -list ===" >> "$GITHUB_WORKSPACE/ci-logs/diag.txt"
+          xcodebuild -list -project HelloWorld.xcodeproj 2>&1 | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
+
+      - name: Build (unsigned)
+        run: |
+          set -o pipefail
           echo "=== xcodebuild build ===" >> "$GITHUB_WORKSPACE/ci-logs/diag.txt"
           xcodebuild \
             -project HelloWorld.xcodeproj \
@@ -81,17 +72,23 @@ jobs:
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
             ONLY_ACTIVE_ARCH=NO \
-            build 2>&1 | tail -100 | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
+            build 2>&1 | tail -80 | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
 
       - name: Package into .ipa
-        continue-on-error: true
         run: |
-          echo "=== packaging ===" >> "$GITHUB_WORKSPACE/ci-logs/diag.txt"
-          ls -la build/Build/Products/Release-iphoneos/ 2>&1 | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
+          set -o pipefail
+          ls -la build/Build/Products/Release-iphoneos/ | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
           mkdir -p Payload
-          cp -R build/Build/Products/Release-iphoneos/HelloWorld.app Payload/ 2>&1 | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
-          zip -qr HelloWorld.ipa Payload 2>&1 | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
-          ls -lh HelloWorld.ipa 2>&1 | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
+          cp -R build/Build/Products/Release-iphoneos/HelloWorld.app Payload/
+          zip -qr HelloWorld.ipa Payload
+          ls -lh HelloWorld.ipa | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
+          # A real .ipa is megabytes. Fail loudly if it is suspiciously small.
+          size=$(stat -f%z HelloWorld.ipa)
+          echo "ipa size bytes: $size" | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
+          if [ "$size" -lt 100000 ]; then
+            echo "ERROR: .ipa is only $size bytes - build produced nothing real" | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
+            exit 1
+          fi
 
       - name: Publish diagnostics back to repo
         if: always()
@@ -105,9 +102,8 @@ jobs:
           git push || true
 
       - name: Upload IPA
-        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: HelloWorld-ipa
           path: HelloWorld/HelloWorld.ipa
-          if-no-files-found: warn
+          if-no-files-found: error
