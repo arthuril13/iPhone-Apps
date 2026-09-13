@@ -3,12 +3,16 @@ name: Build HelloWorld IPA
 # Builds an UNSIGNED .ipa on a free GitHub-hosted Mac.
 # You then sign + install it with Sideloadly using your own Apple ID.
 #
-# IMPORTANT: XcodeGen 2.46 writes pbxproj "objectVersion = 77", which
-# Xcode 15.4 (the macos-14 image) cannot read. The macos-15 image ships
-# Xcode 16, which reads format 77 fine. Do not downgrade the runner.
-#
-# Steps must NOT use continue-on-error: that previously made a broken
-# build report success and upload an empty 235-byte .ipa.
+# NOTES (hard-won):
+#  - XcodeGen 2.46 writes pbxproj "objectVersion = 77". Xcode 15.4 on the
+#    macos-14 image CANNOT read that. macos-15 ships Xcode 16 and works.
+#    Do not downgrade the runner.
+#  - Do NOT use continue-on-error: it made a broken build report success
+#    and upload an empty 235-byte .ipa.
+#  - Validate the .ipa by STRUCTURE, not by an arbitrary byte size. A
+#    minimal unsigned SwiftUI app really does zip down to ~15 KB.
+#  - The finished .ipa is committed to dist/ so it can be downloaded
+#    without a GitHub login (artifact downloads require auth).
 
 on:
   push:
@@ -33,7 +37,7 @@ jobs:
       - name: Prepare log
         working-directory: .
         run: |
-          mkdir -p ci-logs
+          mkdir -p ci-logs dist
           echo "CI diagnostics - $(date -u)" > ci-logs/diag.txt
 
       - name: Show toolchain versions
@@ -48,20 +52,11 @@ jobs:
 
       - name: Generate Xcode project
         run: |
-          echo "=== xcodegen generate ===" >> "$GITHUB_WORKSPACE/ci-logs/diag.txt"
           xcodegen generate 2>&1 | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
-          echo "objectVersion in generated project:" | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
-          grep -m1 objectVersion HelloWorld.xcodeproj/project.pbxproj | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
-
-      - name: List targets and schemes
-        run: |
-          echo "=== xcodebuild -list ===" >> "$GITHUB_WORKSPACE/ci-logs/diag.txt"
-          xcodebuild -list -project HelloWorld.xcodeproj 2>&1 | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
 
       - name: Build (unsigned)
         run: |
           set -o pipefail
-          echo "=== xcodebuild build ===" >> "$GITHUB_WORKSPACE/ci-logs/diag.txt"
           xcodebuild \
             -project HelloWorld.xcodeproj \
             -scheme HelloWorld \
@@ -72,36 +67,52 @@ jobs:
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
             ONLY_ACTIVE_ARCH=NO \
-            build 2>&1 | tail -80 | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
+            build 2>&1 | tail -25 | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
 
       - name: Package into .ipa
         run: |
           set -o pipefail
-          ls -la build/Build/Products/Release-iphoneos/ | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
-          mkdir -p Payload
-          cp -R build/Build/Products/Release-iphoneos/HelloWorld.app Payload/
-          zip -qr HelloWorld.ipa Payload
-          ls -lh HelloWorld.ipa | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
-          # A real .ipa is megabytes. Fail loudly if it is suspiciously small.
-          size=$(stat -f%z HelloWorld.ipa)
-          echo "ipa size bytes: $size" | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
-          if [ "$size" -lt 100000 ]; then
-            echo "ERROR: .ipa is only $size bytes - build produced nothing real" | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
-            exit 1
-          fi
+          APP=build/Build/Products/Release-iphoneos/HelloWorld.app
+          {
+            echo "=== packaging ==="
+            ls -la "$APP"
+            echo "--- app bundle size ---"
+            du -sh "$APP"
+          } 2>&1 | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
 
-      - name: Publish diagnostics back to repo
+          rm -rf Payload
+          mkdir -p Payload
+          cp -R "$APP" Payload/
+          zip -qr HelloWorld.ipa Payload
+
+          # Validate by STRUCTURE, not size.
+          {
+            echo "--- ipa contents ---"
+            unzip -l HelloWorld.ipa
+          } 2>&1 | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
+
+          test -f Payload/HelloWorld.app/HelloWorld || { echo "ERROR: no executable in bundle"; exit 1; }
+          test -f Payload/HelloWorld.app/Info.plist || { echo "ERROR: no Info.plist in bundle"; exit 1; }
+          file Payload/HelloWorld.app/HelloWorld | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
+          file Payload/HelloWorld.app/HelloWorld | grep -q "Mach-O" || { echo "ERROR: executable is not Mach-O"; exit 1; }
+          echo "IPA OK: $(stat -f%z HelloWorld.ipa) bytes" | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
+
+      - name: Copy .ipa into dist for direct download
+        run: cp HelloWorld.ipa "$GITHUB_WORKSPACE/dist/HelloWorld.ipa"
+
+      - name: Publish .ipa and diagnostics back to repo
         if: always()
         working-directory: .
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -f ci-logs/diag.txt
-          git commit -m "CI diagnostics [skip ci]" || echo "nothing to commit"
+          git add -f dist/HelloWorld.ipa || true
+          git commit -m "CI: publish ipa + diagnostics [skip ci]" || echo "nothing to commit"
           git pull --rebase --autostash || true
           git push || true
 
-      - name: Upload IPA
+      - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
         with:
           name: HelloWorld-ipa
