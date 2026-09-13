@@ -1,0 +1,87 @@
+CI diagnostics - Sun Sep 13 16:04:21 UTC 2026
+xcodegen
+[32m==>[0m [1mFetching downloads for: [32mxcodegen[39m[0m
+✔︎ Bottle xcodegen (2.46.0)
+[34m==>[0m [1mPouring xcodegen--2.46.0.arm64_sonoma.bottle.1.tar.gz[0m
+🍺  /opt/homebrew/Cellar/xcodegen/2.46.0: 38 files, 7.6MB
+xcodegen version: Version: 2.46.0
+=== xcodegen generate ===
+⚙️  Generating plists...
+⚙️  Generating project...
+⚙️  Writing project...
+Created project at /Users/runner/work/iPhone-Apps/iPhone-Apps/HelloWorld/HelloWorld.xcodeproj
+=== xcodebuild -version ===
+Xcode 15.4
+Build version 15F31d
+=== pwd / ls ===
+/Users/runner/work/iPhone-Apps/iPhone-Apps/HelloWorld
+total 8
+drwxr-xr-x  5 runner  staff   160 Sep 13 16:04 .
+drwxr-xr-x  8 runner  staff   256 Sep 13 16:04 ..
+drwxr-xr-x  5 runner  staff   160 Sep 13 16:04 HelloWorld.xcodeproj
+drwxr-xr-x  4 runner  staff   128 Sep 13 16:04 Sources
+-rw-r--r--  1 runner  staff  1168 Sep 13 16:04 project.yml
+=== xcodeproj contents ===
+total 24
+drwxr-xr-x  5 runner  staff    160 Sep 13 16:04 .
+drwxr-xr-x  5 runner  staff    160 Sep 13 16:04 ..
+-rw-r--r--  1 runner  staff  10465 Sep 13 16:04 project.pbxproj
+drwxr-xr-x  3 runner  staff     96 Sep 13 16:04 project.xcworkspace
+drwxr-xr-x  3 runner  staff     96 Sep 13 16:04 xcshareddata
+=== project.pbxproj head ===
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		6054E168638588F342570CD4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C81E4B04B42101A17B62DE13 /* ContentView.swift */; };
+		7908DCA6F355664AEA4419C2 /* HelloWorldApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B74F0C3E5D9EB8C1EC4B515 /* HelloWorldApp.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		35D466DB8920E7A52C599EBC /* HelloWorld.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = HelloWorld.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5B74F0C3E5D9EB8C1EC4B515 /* HelloWorldApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelloWorldApp.swift; sourceTree = "<group>"; };
+		C81E4B04B42101A17B62DE13 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+=== xcodebuild -list (THIS IS THE FAILING COMMAND) ===
+Command line invocation:
+    /Applications/Xcode_15.4.app/Contents/Developer/usr/bin/xcodebuild -list -project HelloWorld.xcodeproj
+
+User defaults from command line:
+    IDEPackageSupportUseBuiltinSCM = YES
+
+2026-09-13 16:04:27.008 xcodebuild[27785:69641] Writing error result bundle to /var/folders/s6/5hzmn6lx4dz5nxs7k_0slzph0000gn/T/ResultBundle_2026-13-09_16-04-0027.xcresult
+xcodebuild: error: Unable to read project 'HelloWorld.xcodeproj'.
+	Reason: The project ‘HelloWorld’ cannot be opened because it is in a future Xcode project file format (77). Adjust the project format using a compatible version of Xcode to allow it to be opened by this version of Xcode.
+
+
+exit code was: 0
+=== xcodebuild build ===
+Command line invocation:
+    /Applications/Xcode_15.4.app/Contents/Developer/usr/bin/xcodebuild -project HelloWorld.xcodeproj -scheme HelloWorld -configuration Release -destination generic/platform=iOS -derivedDataPath build CODE_SIGN_IDENTITY= CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO ONLY_ACTIVE_ARCH=NO build
+
+User defaults from command line:
+    IDEDerivedDataPathOverride = /Users/runner/work/iPhone-Apps/iPhone-Apps/HelloWorld/build
+    IDEPackageSupportUseBuiltinSCM = YES
+
+Build settings from command line:
+    CODE_SIGN_IDENTITY = 
+    CODE_SIGNING_ALLOWED = NO
+    CODE_SIGNING_REQUIRED = NO
+    ONLY_ACTIVE_ARCH = NO
+
+2026-09-13 16:04:30.630 xcodebuild[28081:70707] Writing error result bundle to /var/folders/s6/5hzmn6lx4dz5nxs7k_0slzph0000gn/T/ResultBundle_2026-13-09_16-04-0030.xcresult
+xcodebuild: error: Unable to read project 'HelloWorld.xcodeproj'.
+	Reason: The project ‘HelloWorld’ cannot be opened because it is in a future Xcode project file format (77). Adjust the project format using a compatible version of Xcode to allow it to be opened by this version of Xcode.
+
+
+=== packaging ===
+ls: build/Build/Products/Release-iphoneos/: No such file or directory
+cp: build/Build/Products/Release-iphoneos/HelloWorld.app: No such file or directory
+-rw-r--r--  1 runner  staff   166B Sep 13 16:04 HelloWorld.ipa
