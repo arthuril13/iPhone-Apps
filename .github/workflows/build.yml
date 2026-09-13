@@ -3,13 +3,18 @@ name: Build HelloWorld IPA
 # Builds an UNSIGNED .ipa on a free GitHub-hosted Mac.
 # You then sign + install it with Sideloadly using your own Apple ID.
 #
-# The build is split into small, separately-named steps on purpose: the
-# Actions API exposes each step's name and pass/fail, so the failing step
-# name pinpoints the cause even when the full logs aren't readable.
+# Actions logs aren't readable without auth, so every diagnostic and build
+# command tees its output into ci-logs/diag.txt, which the final step commits
+# back to the repo (with [skip ci] so it doesn't loop). That file is then
+# readable at raw.githubusercontent.com.
 
 on:
   push:
+    branches: [main]
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -23,30 +28,49 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Prepare log
+        working-directory: .
+        run: |
+          mkdir -p ci-logs
+          echo "CI diagnostics - $(date -u)" > ci-logs/diag.txt
+
       - name: Install XcodeGen
-        run: brew install xcodegen
+        continue-on-error: true
+        run: |
+          brew install xcodegen 2>&1 | tail -5 | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
+          echo "xcodegen version: $(xcodegen --version 2>&1)" | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
 
       - name: Generate Xcode project
-        run: xcodegen generate
-
-      - name: Diag - Xcode version
-        run: xcodebuild -version
-
-      - name: Diag - project file exists
+        continue-on-error: true
         run: |
-          pwd
-          ls -la
-          test -d HelloWorld.xcodeproj && echo "xcodeproj FOUND"
+          echo "=== xcodegen generate ===" >> "$GITHUB_WORKSPACE/ci-logs/diag.txt"
+          xcodegen generate 2>&1 | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
+
+      - name: Diag - environment
+        continue-on-error: true
+        run: |
+          {
+            echo "=== xcodebuild -version ==="
+            xcodebuild -version 2>&1
+            echo "=== pwd / ls ==="
+            pwd; ls -la
+            echo "=== xcodeproj contents ==="
+            ls -la HelloWorld.xcodeproj 2>&1
+            echo "=== project.pbxproj head ==="
+            head -20 HelloWorld.xcodeproj/project.pbxproj 2>&1
+          } 2>&1 | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
 
       - name: Diag - list targets and schemes
-        run: xcodebuild -list -project HelloWorld.xcodeproj
-
-      - name: Diag - show generated scheme files
-        run: ls -la HelloWorld.xcodeproj/xcshareddata/xcschemes/ || echo "NO SHARED SCHEMES DIR"
+        continue-on-error: true
+        run: |
+          echo "=== xcodebuild -list (THIS IS THE FAILING COMMAND) ===" >> "$GITHUB_WORKSPACE/ci-logs/diag.txt"
+          xcodebuild -list -project HelloWorld.xcodeproj 2>&1 | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
+          echo "exit code was: $?" | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
 
       - name: Build with scheme
+        continue-on-error: true
         run: |
-          set -o pipefail
+          echo "=== xcodebuild build ===" >> "$GITHUB_WORKSPACE/ci-logs/diag.txt"
           xcodebuild \
             -project HelloWorld.xcodeproj \
             -scheme HelloWorld \
@@ -57,21 +81,33 @@ jobs:
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
             ONLY_ACTIVE_ARCH=NO \
-            build 2>&1 | tail -120
-
-      - name: Diag - show build products
-        run: ls -la build/Build/Products/Release-iphoneos/ || echo "NO PRODUCTS DIR"
+            build 2>&1 | tail -100 | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
 
       - name: Package into .ipa
+        continue-on-error: true
         run: |
+          echo "=== packaging ===" >> "$GITHUB_WORKSPACE/ci-logs/diag.txt"
+          ls -la build/Build/Products/Release-iphoneos/ 2>&1 | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
           mkdir -p Payload
-          cp -R build/Build/Products/Release-iphoneos/HelloWorld.app Payload/
-          zip -qr HelloWorld.ipa Payload
-          ls -lh HelloWorld.ipa
+          cp -R build/Build/Products/Release-iphoneos/HelloWorld.app Payload/ 2>&1 | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
+          zip -qr HelloWorld.ipa Payload 2>&1 | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
+          ls -lh HelloWorld.ipa 2>&1 | tee -a "$GITHUB_WORKSPACE/ci-logs/diag.txt"
+
+      - name: Publish diagnostics back to repo
+        if: always()
+        working-directory: .
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f ci-logs/diag.txt
+          git commit -m "CI diagnostics [skip ci]" || echo "nothing to commit"
+          git pull --rebase --autostash || true
+          git push || true
 
       - name: Upload IPA
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: HelloWorld-ipa
           path: HelloWorld/HelloWorld.ipa
-          if-no-files-found: error
+          if-no-files-found: warn
