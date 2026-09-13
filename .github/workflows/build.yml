@@ -1,4 +1,4 @@
-name: Build iOS IPA
+name: Build HelloWorld IPA
 
 # Builds an UNSIGNED .ipa on a free GitHub-hosted Mac.
 # You then sign + install it with Sideloadly using your own Apple ID.
@@ -10,6 +10,10 @@ on:
 jobs:
   build:
     runs-on: macos-14
+
+    defaults:
+      run:
+        working-directory: HelloWorld
 
     steps:
       - name: Checkout
@@ -45,5 +49,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: HelloWorld-ipa
-          path: HelloWorld.ipa
+          path: HelloWorld/HelloWorld.ipa
           if-no-files-found: error
