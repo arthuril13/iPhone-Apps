@@ -1,0 +1,65 @@
+ESPPortal CI - Mon Sep 14 18:07:30 UTC 2026
+Xcode 16.4
+Build version 16F6
+Version: 2.46.0
+⚙️  Generating plists...
+⚙️  Generating project...
+⚙️  Writing project...
+Created project at /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/ESPPortal.xcodeproj
+
+Copy /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Products/Release-iphoneos/ESPPortal.swiftmodule/arm64-apple-ios.abi.json /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Intermediates.noindex/ESPPortal.build/Release-iphoneos/ESPPortal.build/Objects-normal/arm64/ESPPortal.abi.json (in target 'ESPPortal' from project 'ESPPortal')
+    cd /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Intermediates.noindex/ESPPortal.build/Release-iphoneos/ESPPortal.build/Objects-normal/arm64/ESPPortal.abi.json /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Products/Release-iphoneos/ESPPortal.swiftmodule/arm64-apple-ios.abi.json
+
+Copy /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Products/Release-iphoneos/ESPPortal.swiftmodule/Project/arm64-apple-ios.swiftsourceinfo /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Intermediates.noindex/ESPPortal.build/Release-iphoneos/ESPPortal.build/Objects-normal/arm64/ESPPortal.swiftsourceinfo (in target 'ESPPortal' from project 'ESPPortal')
+    cd /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Intermediates.noindex/ESPPortal.build/Release-iphoneos/ESPPortal.build/Objects-normal/arm64/ESPPortal.swiftsourceinfo /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Products/Release-iphoneos/ESPPortal.swiftmodule/Project/arm64-apple-ios.swiftsourceinfo
+
+Ld /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Products/Release-iphoneos/ESPPortal.app/ESPPortal normal (in target 'ESPPortal' from project 'ESPPortal')
+    cd /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal
+    /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios16.0 -isysroot /Applications/Xcode_16.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.5.sdk -Os -L/Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Intermediates.noindex/EagerLinkingTBDs/Release-iphoneos -L/Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Products/Release-iphoneos -F/Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Intermediates.noindex/EagerLinkingTBDs/Release-iphoneos -F/Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Products/Release-iphoneos -filelist /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Intermediates.noindex/ESPPortal.build/Release-iphoneos/ESPPortal.build/Objects-normal/arm64/ESPPortal.LinkFileList -Xlinker -rpath -Xlinker @executable_path/Frameworks -dead_strip -Xlinker -object_path_lto -Xlinker /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Intermediates.noindex/ESPPortal.build/Release-iphoneos/ESPPortal.build/Objects-normal/arm64/ESPPortal_lto.o -Xlinker -dependency_info -Xlinker /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Intermediates.noindex/ESPPortal.build/Release-iphoneos/ESPPortal.build/Objects-normal/arm64/ESPPortal_dependency_info.dat -fobjc-link-runtime -L/Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Intermediates.noindex/ESPPortal.build/Release-iphoneos/ESPPortal.build/Objects-normal/arm64/ESPPortal.swiftmodule -o /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Products/Release-iphoneos/ESPPortal.app/ESPPortal
+
+GenerateDSYMFile /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Products/Release-iphoneos/ESPPortal.app.dSYM /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Products/Release-iphoneos/ESPPortal.app/ESPPortal (in target 'ESPPortal' from project 'ESPPortal')
+    cd /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal
+    /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/dsymutil /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Products/Release-iphoneos/ESPPortal.app/ESPPortal -o /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Products/Release-iphoneos/ESPPortal.app.dSYM
+
+ExtractAppIntentsMetadata (in target 'ESPPortal' from project 'ESPPortal')
+    cd /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal
+    /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --module-name ESPPortal --sdk-root /Applications/Xcode_16.4.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.5.sdk --xcode-version 16F6 --platform-family iOS --deployment-target 16.0 --bundle-identifier com.arthuril.espportal --output /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Products/Release-iphoneos/ESPPortal.app --target-triple arm64-apple-ios16.0 --binary-file /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Products/Release-iphoneos/ESPPortal.app/ESPPortal --dependency-file /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Intermediates.noindex/ESPPortal.build/Release-iphoneos/ESPPortal.build/Objects-normal/arm64/ESPPortal_dependency_info.dat --stringsdata-file /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Intermediates.noindex/ESPPortal.build/Release-iphoneos/ESPPortal.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Intermediates.noindex/ESPPortal.build/Release-iphoneos/ESPPortal.build/Objects-normal/arm64/ESPPortal.SwiftFileList --metadata-file-list /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Intermediates.noindex/ESPPortal.build/Release-iphoneos/ESPPortal.build/ESPPortal.DependencyMetadataFileList --static-metadata-file-list /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Intermediates.noindex/ESPPortal.build/Release-iphoneos/ESPPortal.build/ESPPortal.DependencyStaticMetadataFileList --swift-const-vals-list /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Intermediates.noindex/ESPPortal.build/Release-iphoneos/ESPPortal.build/Objects-normal/arm64/ESPPortal.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --validate-assistant-intents --no-app-shortcuts-localization
+2026-09-14 18:07:55.449 appintentsmetadataprocessor[3012:12605] Starting appintentsmetadataprocessor export
+2026-09-14 18:07:55.458 appintentsmetadataprocessor[3012:12605] warning: Metadata extraction skipped. No AppIntents.framework dependency found.
+
+CopySwiftLibs /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Products/Release-iphoneos/ESPPortal.app (in target 'ESPPortal' from project 'ESPPortal')
+    cd /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal
+    builtin-swiftStdLibTool --copy --verbose --scan-executable /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Products/Release-iphoneos/ESPPortal.app/ESPPortal --scan-folder /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Products/Release-iphoneos/ESPPortal.app/Frameworks --scan-folder /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Products/Release-iphoneos/ESPPortal.app/PlugIns --scan-folder /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Products/Release-iphoneos/ESPPortal.app/SystemExtensions --scan-folder /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Products/Release-iphoneos/ESPPortal.app/Extensions --platform iphoneos --toolchain /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Products/Release-iphoneos/ESPPortal.app/Frameworks --strip-bitcode --strip-bitcode-tool /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Intermediates.noindex/ESPPortal.build/Release-iphoneos/ESPPortal.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os
+Ignoring --strip-bitcode because --sign was not passed
+
+AppIntentsSSUTraining (in target 'ESPPortal' from project 'ESPPortal')
+    cd /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal
+    /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsnltrainingprocessor --infoplist-path /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Products/Release-iphoneos/ESPPortal.app/Info.plist --temp-dir-path /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Intermediates.noindex/ESPPortal.build/Release-iphoneos/ESPPortal.build/ssu --bundle-id com.arthuril.espportal --product-path /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Products/Release-iphoneos/ESPPortal.app --extracted-metadata-path /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Products/Release-iphoneos/ESPPortal.app/Metadata.appintents --metadata-file-list /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Intermediates.noindex/ESPPortal.build/Release-iphoneos/ESPPortal.build/ESPPortal.DependencyMetadataFileList --archive-ssu-assets
+2026-09-14 18:07:55.498 appintentsnltrainingprocessor[3016:12616] Parsing options for appintentsnltrainingprocessor
+2026-09-14 18:07:55.499 appintentsnltrainingprocessor[3016:12616] No AppShortcuts found - Skipping.
+
+RegisterExecutionPolicyException /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Products/Release-iphoneos/ESPPortal.app (in target 'ESPPortal' from project 'ESPPortal')
+    cd /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal
+    builtin-RegisterExecutionPolicyException /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Products/Release-iphoneos/ESPPortal.app
+
+Validate /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Products/Release-iphoneos/ESPPortal.app (in target 'ESPPortal' from project 'ESPPortal')
+    cd /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal
+    builtin-validationUtility /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Products/Release-iphoneos/ESPPortal.app -infoplist-subpath Info.plist
+warning: All interface orientations must be supported unless the app requires full screen. (in target 'ESPPortal' from project 'ESPPortal')
+
+Touch /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Products/Release-iphoneos/ESPPortal.app (in target 'ESPPortal' from project 'ESPPortal')
+    cd /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal
+    /usr/bin/touch -c /Users/runner/work/iPhone-Apps/iPhone-Apps/ESPPortal/build/Build/Products/Release-iphoneos/ESPPortal.app
+
+note: Disabling previews because SWIFT_VERSION is set and SWIFT_OPTIMIZATION_LEVEL=-O, expected -Onone (in target 'ESPPortal' from project 'ESPPortal')
+** BUILD SUCCEEDED **
+
+total 1128
+drwxr-xr-x  5 runner  staff     160 Sep 14 18:07 .
+drwxr-xr-x@ 5 runner  staff     160 Sep 14 18:07 ..
+-rwxr-xr-x  1 runner  staff  565568 Sep 14 18:07 ESPPortal
+-rw-r--r--  1 runner  staff    1004 Sep 14 18:07 Info.plist
+-rw-r--r--  1 runner  staff       8 Sep 14 18:07 PkgInfo
+IPA OK: 118931 bytes
