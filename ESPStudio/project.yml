@@ -1,0 +1,44 @@
+name: ESPStudio
+options:
+  bundleIdPrefix: com.arthuril
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+
+targets:
+  ESPStudio:
+    type: application
+    platform: iOS
+    sources:
+      - Sources
+      - Assets.xcassets
+    info:
+      path: Info.plist
+      properties:
+        CFBundleDisplayName: ESP Studio
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        NSBluetoothAlwaysUsageDescription: "Connect to your ESP32 to control its beacon, WiFi and captive portal."
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.arthuril.espstudio
+        PRODUCT_NAME: ESPStudio
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SWIFT_VERSION: "5.0"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        CODE_SIGN_IDENTITY: ""
+        CODE_SIGNING_REQUIRED: NO
+        CODE_SIGNING_ALLOWED: NO
+
+schemes:
+  ESPStudio:
+    build:
+      targets:
+        ESPStudio: all
+    run:
+      config: Debug
+    archive:
+      config: Release
